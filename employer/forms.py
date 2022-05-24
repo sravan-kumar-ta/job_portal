@@ -1,9 +1,8 @@
 from django import forms
+from .models import Job
 
 
-class JobForm(forms.Form):
-    job_title = forms.CharField()
-    company = forms.CharField()
-    location = forms.CharField()
-    salary = forms.IntegerField()
-    experience = forms.IntegerField()
+class JobForm(forms.ModelForm):
+    class Meta:
+        model = Job
+        fields = '__all__'

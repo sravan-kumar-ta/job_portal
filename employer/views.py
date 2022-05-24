@@ -19,18 +19,19 @@ class AddJobView(View):
     def post(self, request):
         form = JobForm(request.POST)
         if form.is_valid():
-            j_name = form.cleaned_data.get("job_title")
-            c_name = form.cleaned_data.get("company")
-            location = form.cleaned_data.get("location")
-            salary = form.cleaned_data.get("salary")
-            exp = form.cleaned_data.get("experience")
-            Job.objects.create(
-                job_title=j_name,
-                company=c_name,
-                location=location,
-                salary=salary,
-                experience=exp
-            )
+            form.save()
             return render(request, "emp-home.html")
         else:
             return render(request, "emp-add_job.html", {"form": form})
+
+
+class ListJobsView(View):
+    def get(self, request):
+        jobs = Job.objects.all()
+        return render(request, 'emp-list_jobs.html', {'jobs': jobs})
+
+
+class JobDetailView(View):
+    def get(self, request, id):
+        job = Job.objects.get(id=id)
+        return render(request, 'emp-detail_job.html', {'job': job})
