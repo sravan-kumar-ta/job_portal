@@ -25,8 +25,8 @@
                     <td>{{job.experience}}</td>
                     <td>
                         <a href="{% url 'emp-jobdetail' job.id %}" class="btn btn-outline-primary">View</a>
-                        <a href="" class="btn btn-outline-success">Edit</a>
-                        <a href="" class="btn btn-outline-danger">Delete</a>
+                        <a href="{% url 'emp-jobedit' job.id %}" class="btn btn-outline-success">Edit</a>
+                        <a href="{% url 'emp-jobdelete' job.id %}" class="btn btn-outline-danger">Delete</a>
                     </td>
                 </tr>
                 {% endfor %}
