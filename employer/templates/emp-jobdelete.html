@@ -1,0 +1,15 @@
+{% extends 'base.html' %}
+
+{% block content %}
+<div class="row">
+    <div class="col-2"></div>
+    <div class="col-8">
+        <form method="post">
+            {% csrf_token %}
+            <p>Are you sure want to delete this job</p>
+            <input type="submit" value="Delete Job">
+        </form>
+    </div>
+    <div class="col-2"></div>
+</div>
+{% endblock %}
