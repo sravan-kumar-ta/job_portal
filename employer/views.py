@@ -1,9 +1,10 @@
+from django.contrib.auth.models import User
 from django.shortcuts import render, redirect
 from django.urls import reverse_lazy
 from django.views import View
 from django.views.generic import TemplateView, ListView, CreateView, DetailView, UpdateView, DeleteView
 
-from employer.forms import JobForm
+from employer.forms import JobForm, SignUpForm
 from employer.models import Job
 
 
@@ -80,3 +81,10 @@ class JobDeleteView(DeleteView):
     #     job = Job.objects.get(id=id)
     #     job.delete()
     #     return redirect('emp-alljobs')
+
+
+class SignUpView(CreateView):
+    model = User
+    form_class = SignUpForm
+    template_name = 'user_signup.html'
+    success_url = reverse_lazy('emp-alljobs')
