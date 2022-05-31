@@ -1,10 +1,11 @@
+from django.contrib.auth import authenticate, login, logout
 from django.contrib.auth.models import User
 from django.shortcuts import render, redirect
 from django.urls import reverse_lazy
 from django.views import View
-from django.views.generic import TemplateView, ListView, CreateView, DetailView, UpdateView, DeleteView
+from django.views.generic import TemplateView, ListView, CreateView, DetailView, UpdateView, DeleteView, FormView
 
-from employer.forms import JobForm, SignUpForm
+from employer.forms import JobForm, SignUpForm, LoginForm
 from employer.models import Job
 
 
@@ -88,3 +89,25 @@ class SignUpView(CreateView):
     form_class = SignUpForm
     template_name = 'user_signup.html'
     success_url = reverse_lazy('emp-alljobs')
+
+
+class LogInView(FormView):
+    form_class = LoginForm
+    template_name = 'login.html'
+
+    def post(self, request, *args, **kwargs):
+        form = LoginForm(request.POST)
+        if form.is_valid():
+            username = form.cleaned_data.get('username')
+            password = form.cleaned_data.get('password')
+            user = authenticate(request, username=username, password=password)
+            if user:
+                login(request, user)
+                return redirect('emp-alljobs')
+            else:
+                return render(request, 'login.html', {'form': form})
+
+
+def signout_view(request):
+    logout(request)
+    return redirect('signin')
