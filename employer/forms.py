@@ -19,3 +19,17 @@ class SignUpForm(UserCreationForm):
 class LoginForm(forms.Form):
     username = forms.CharField()
     password = forms.CharField(widget=forms.PasswordInput())
+
+
+class PasswordResetForm(forms.Form):
+    password1 = forms.CharField(widget=forms.PasswordInput())
+    confirm_password = forms.CharField()
+
+    def clean(self):
+        cleaned_data = super().clean()
+        pwd1 = cleaned_data.get("password1")
+        pwd2 = cleaned_data.get("confirm_password")
+
+        if pwd1 != pwd2:
+            msg = "Password mismatch"
+            self.add_error("password1", msg)

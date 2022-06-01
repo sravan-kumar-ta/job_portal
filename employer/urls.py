@@ -10,5 +10,7 @@ urlpatterns = [
     path('jobs/remove/<int:id>/', views.JobDeleteView.as_view(), name="emp-jobdelete"),
     path('users/accounts/signup/', views.SignUpView.as_view(), name='signup'),
     path('users/account/signin/', views.LogInView.as_view(), name="signin"),
-    path('users/account/signout/', views.signout_view, name="signout")
+    path('users/account/signout/', views.signout_view, name="signout"),
+    path('users/password/change/', views.ChangePasswordView.as_view(), name="password-change"),
+    path('users/password/reset/', views.PasswordResetView.as_view(), name="password-reset")
 ]

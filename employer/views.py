@@ -5,7 +5,7 @@ from django.urls import reverse_lazy
 from django.views import View
 from django.views.generic import TemplateView, ListView, CreateView, DetailView, UpdateView, DeleteView, FormView
 
-from employer.forms import JobForm, SignUpForm, LoginForm
+from employer.forms import JobForm, SignUpForm, LoginForm, PasswordResetForm
 from employer.models import Job
 
 
@@ -111,3 +111,31 @@ class LogInView(FormView):
 def signout_view(request):
     logout(request)
     return redirect('signin')
+
+
+class ChangePasswordView(TemplateView):
+    template_name = "change_password.html"
+
+    def post(self, request, *args, **kwargs):
+        pwd = request.POST.get("pwd")
+        uname = request.user
+        user = authenticate(request, username=uname, password=pwd)
+        if user:
+            return redirect("password-reset")
+        else:
+            return render(request, self.template_name)
+
+
+class PasswordResetView(TemplateView):
+    template_name = "password_reset.html"
+
+    def post(self, request, *args, **kwargs):
+        pwd1 = request.POST.get("pwd1")
+        pwd2 = request.POST.get("pwd2")
+        if pwd1 == pwd2:
+            user = User.objects.get(username="sravan")
+            user.set_password('sravan')
+            user.save()
+            return redirect('signin')
+        else:
+            return render(request, self.template_name)
