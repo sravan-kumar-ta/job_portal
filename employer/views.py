@@ -5,8 +5,8 @@ from django.urls import reverse_lazy
 from django.views import View
 from django.views.generic import TemplateView, ListView, CreateView, DetailView, UpdateView, DeleteView, FormView
 
-from employer.forms import JobForm, SignUpForm, LoginForm, PasswordResetForm
-from employer.models import Job
+from employer.forms import JobForm, SignUpForm, LoginForm, CompanyProfileForm
+from employer.models import Job, CompanyProfile
 
 
 # Create your views here.
@@ -139,3 +139,23 @@ class PasswordResetView(TemplateView):
             return redirect('signin')
         else:
             return render(request, self.template_name)
+
+
+class CompanyProfileView(CreateView):
+    model = CompanyProfile
+    form_class = CompanyProfileForm
+    template_name = "emp_addprofile.html"
+    success_url = reverse_lazy("emp-home")
+
+    # def post(self, request, *args, **kwargs):
+    #     form = CompanyProfileForm(request.POST, files=request.FILES)
+    #     if form.is_valid():
+    #         form.instance.user = request.user
+    #         form.save()
+    #         return redirect('emp-home')
+    #     else:
+    #         return render(request, self.template_name, {"form": form})
+
+    def form_valid(self, form):
+        form.instance.user = self.request.user
+        return super().form_valid(form)

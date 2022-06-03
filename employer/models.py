@@ -1,4 +1,5 @@
 from django.db import models
+from django.contrib.auth.models import User
 
 
 # Create your models here.
@@ -11,3 +12,12 @@ class Job(models.Model):
 
     def __str__(self):
         return self.job_title
+
+
+class CompanyProfile(models.Model):
+    company_name = models.CharField(max_length=100)
+    user = models.OneToOneField(User, on_delete=models.CASCADE)
+    logo = models.ImageField(upload_to="company_profile", null=True)
+    location = models.CharField(max_length=100)
+    services = models.CharField(max_length=100)
+    description = models.CharField(max_length=100)
