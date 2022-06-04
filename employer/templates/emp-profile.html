@@ -1,0 +1,25 @@
+{% extends 'base.html' %}
+
+{% block content %}
+<div class="row mt-5">
+    <div class="col-2"></div>
+    <div class="col-8">
+        <div class="card" style="width: 18rem;">
+            <img class="card-img-top" src="{{ request.user.employer.logo.url }}" alt="Card image cap">
+            <div class="card-body">
+                <h5 class="card-title">{{ request.user.employer.company_name }}</h5>
+                <p class="card-text">{{ request.user.employer.description }}</p>
+            </div>
+            <ul class="list-group list-group-flush">
+                <li class="list-group-item">{{ request.user.first_name }}</li>
+                <li class="list-group-item">{{ request.user.email }}</li>
+                <li class="list-group-item">{{ request.user.employer.location }}</li>
+            </ul>
+            <div class="card-body">
+                <a href="{% url 'emp-editprofile' request.user.employer.id %}" class="card-link">Update Profile</a>
+            </div>
+        </div>
+    </div>
+    <div class="col-2"></div>
+</div>
+{% endblock %}

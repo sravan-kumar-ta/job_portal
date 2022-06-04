@@ -16,7 +16,7 @@ class Job(models.Model):
 
 class CompanyProfile(models.Model):
     company_name = models.CharField(max_length=100)
-    user = models.OneToOneField(User, on_delete=models.CASCADE)
+    user = models.OneToOneField(User, on_delete=models.CASCADE, related_name="employer")
     logo = models.ImageField(upload_to="company_profile", null=True)
     location = models.CharField(max_length=100)
     services = models.CharField(max_length=100)

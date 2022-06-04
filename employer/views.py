@@ -159,3 +159,15 @@ class CompanyProfileView(CreateView):
     def form_valid(self, form):
         form.instance.user = self.request.user
         return super().form_valid(form)
+
+
+class EmpViewProfileView(TemplateView):
+    template_name = "emp-profile.html"
+
+
+class EmpProfileEditVIew(UpdateView):
+    model = CompanyProfile
+    form_class = CompanyProfileForm
+    pk_url_kwarg = 'id'
+    template_name = "emp_editprofile.html"
+    success_url = reverse_lazy("emp-viewprofile")
