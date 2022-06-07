@@ -7,7 +7,10 @@ from django.contrib.auth.forms import UserCreationForm
 class JobForm(forms.ModelForm):
     class Meta:
         model = Job
-        fields = '__all__'
+        exclude = ('company', 'created_date', 'is_active')
+        widgets = {
+            'last_date': forms.DateInput(attrs={'class': "form-control", "type": "date"})
+        }
 
 
 class SignUpForm(UserCreationForm):

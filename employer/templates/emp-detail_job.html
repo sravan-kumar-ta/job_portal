@@ -9,7 +9,7 @@
                 {{job.job_title}}
             </div>
             <div class="card-body">
-                <h5 class="card-title">{{ job.company }}</h5>
+                <h5 class="card-title">{{ job.company.employer.company_name }}</h5>
                 <p class="card-text">{{job.location}}</p>
                 <p class="card-text">{{job.salary}}</p>
                 <p class="card-text">{{job.experience}}</p>

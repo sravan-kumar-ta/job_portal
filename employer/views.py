@@ -19,6 +19,10 @@ class AddJobView(CreateView):
     form_class = JobForm
     template_name = "emp-add_job.html"
     success_url = reverse_lazy("emp-alljobs")
+
+    def form_valid(self, form):
+        form.instance.company = self.request.user
+        return super().form_valid(form)
     # def get(self, request):
     #     form = JobForm()
     #     return render(request, "emp-add_job.html", {"form": form})
@@ -36,8 +40,12 @@ class ListJobsView(ListView):
     model = Job
     context_object_name = 'jobs'
     template_name = 'emp-list_jobs.html'
+
+    def get_queryset(self):
+        return Job.objects.filter(company=self.request.user)
+
     # def get(self, request):
-    #     jobs = Job.objects.all()
+    #     jobs = Job.objects.filter(company=request.user)
     #     return render(request, 'emp-list_jobs.html', {'jobs': jobs})
 
 
