@@ -1,8 +1,17 @@
 from django.db import models
-from django.contrib.auth.models import User
+from django.contrib.auth.models import User, AbstractUser
 
 
 # Create your models here.
+class User(AbstractUser):
+    options = (
+        ("employer", 'employer'),
+        ("candidate", "candidate")
+    )
+    role = models.CharField(max_length=120, choices=options, default="candidate")
+    phone = models.CharField(max_length=120, null=True)
+
+
 class Job(models.Model):
     job_title = models.CharField(max_length=120)
     company = models.ForeignKey(User, on_delete=models.CASCADE)

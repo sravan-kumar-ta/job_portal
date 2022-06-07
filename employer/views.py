@@ -1,12 +1,12 @@
 from django.contrib.auth import authenticate, login, logout
-from django.contrib.auth.models import User
+# from django.contrib.auth.models import User
 from django.shortcuts import render, redirect
 from django.urls import reverse_lazy
 from django.views import View
 from django.views.generic import TemplateView, ListView, CreateView, DetailView, UpdateView, DeleteView, FormView
 
 from employer.forms import JobForm, SignUpForm, LoginForm, CompanyProfileForm
-from employer.models import Job, CompanyProfile
+from employer.models import Job, CompanyProfile, User
 
 
 # Create your views here.
@@ -96,7 +96,7 @@ class SignUpView(CreateView):
     model = User
     form_class = SignUpForm
     template_name = 'user_signup.html'
-    success_url = reverse_lazy('emp-alljobs')
+    success_url = reverse_lazy('signin')
 
 
 class LogInView(FormView):
@@ -111,7 +111,10 @@ class LogInView(FormView):
             user = authenticate(request, username=username, password=password)
             if user:
                 login(request, user)
-                return redirect('emp-alljobs')
+                if request.user.role == "employer":
+                    return redirect('emp-alljobs')
+                elif request.user.role == "candidate":
+                    return redirect("cand-home")
             else:
                 return render(request, 'login.html', {'form': form})
 
