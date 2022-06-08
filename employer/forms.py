@@ -15,6 +15,9 @@ class JobForm(forms.ModelForm):
 
 
 class SignUpForm(UserCreationForm):
+    password1 = forms.CharField(widget=forms.PasswordInput())
+    password2 = forms.CharField(widget=forms.PasswordInput())
+
     class Meta:
         model = User
         fields = ['first_name', 'last_name', 'email', 'username', 'password1', 'password2', 'role', 'phone']
