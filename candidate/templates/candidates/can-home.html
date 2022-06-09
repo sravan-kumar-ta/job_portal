@@ -8,4 +8,30 @@
   </div>
   <div class="col-4"></div>
 </div>
+<div class="row">
+    <div class="col-4">
+        <div class="card" style="width: 540px">
+            <div class="row g-0">
+                <div class="col-md-4">
+                    <img src="{{ request.user.candidate.profile_pic.url }}" alt="profile image here" class="img-fluid rounded-start">
+                </div>
+                <div class="col-md-8">
+                    <div class="card-body">
+                        <h5 class="card-title">ManageYourProfile</h5>
+                        <p class="card-text">something texts</p>
+                        {% if request.user.candidate %}
+                        <a href="{% url 'cand-profdetail' %}" class="btn btn-primary">View Profile</a>
+                        {% else %}
+                        <a href="">Add profile</a>
+                        {% endif %}
+                        <p class="card-text">
+                            <small class="text-muted">something muted</small>
+                        </p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
 {% endblock %}

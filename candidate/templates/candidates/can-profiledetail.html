@@ -1,0 +1,28 @@
+{% extends 'candidates/base.html' %}
+{% load static %}
+
+{% block body_block %}
+<div class="row">
+  <div class="col-4"></div>
+  <div class="col-4">
+    <div class="card" style="width: 18rem;">
+      <img src="{{ request.user.candidate.profile_pic.url }}" class="card-img-top" alt="something fishy..." style="max-height: 250px">
+      <div class="card-body">
+        <h5 class="card-title">{{ request.user.first_name }}</h5>
+        <p class="card-text">Some quick example text to build on the card title and make up the bulk of the card's content.</p>
+      </div>
+      <ul class="list-group list-group-flush">
+        <li class="list-group-item">{{ request.user.candidate.qualification }}</li>
+        <li class="list-group-item">{{ request.user.candidate.skills }}</li>
+        <li class="list-group-item">
+          <a href="{{ request.user.candidate.resume.url }}">Download CV</a>
+        </li>
+      </ul>
+      <div class="card-body">
+        <a href="{% url 'cand-profedit' %}" class="card-link btn btn-success">Update Profile</a>
+      </div>
+    </div>
+  </div>
+  <div class="col-4"></div>
+</div>
+{% endblock %}

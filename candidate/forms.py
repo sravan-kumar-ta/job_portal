@@ -3,7 +3,6 @@ from candidate.models import CandidateProfile
 
 
 class CandidateProfileForm(forms.ModelForm):
-
     class Meta:
         model = CandidateProfile
         exclude = ("user",)
@@ -14,3 +13,23 @@ class CandidateProfileForm(forms.ModelForm):
             "skills": forms.TextInput(attrs={"class": "form-control rounded-pill"}),
             "experience": forms.NumberInput(attrs={"class": "form-control rounded-pill"})
         }
+
+
+class CandidateProfileUpdateForm(forms.ModelForm):
+    first_name = forms.CharField()
+    last_name = forms.CharField()
+    phone = forms.CharField()
+
+    class Meta:
+        model = CandidateProfile
+        fields = [
+            "first_name",
+            "last_name",
+            "phone",
+            "profile_pic",
+            "resume",
+            "qualification",
+            "skills",
+            "experience"
+        ]
+
