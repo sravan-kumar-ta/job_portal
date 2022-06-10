@@ -1,9 +1,9 @@
 from django.shortcuts import render, redirect
 from django.urls import reverse_lazy
-from django.views.generic import TemplateView, CreateView, FormView
+from django.views.generic import TemplateView, CreateView, FormView, ListView, DetailView
 from candidate.forms import CandidateProfileForm, CandidateProfileUpdateForm
 from candidate.models import CandidateProfile
-from employer.models import User
+from employer.models import User, Job
 
 
 class CandidateHomeView(TemplateView):
@@ -54,3 +54,19 @@ class CandidateProfileEditView(FormView):
             return redirect("cand-home")
         else:
             return render(request, self.template_name, {"form": form})
+
+
+class CandidateJobListView(ListView):
+    model = Job
+    context_object_name = "jobs"
+    template_name = "candidates/joblist.html"
+
+    def get_queryset(self):
+        return self.model.objects.all().order_by("-created_date")
+
+
+class CandidateJobDetailView(DetailView):
+    model = Job
+    context_object_name = "job"
+    template_name = "candidates/jobdetail.html"
+    pk_url_kwarg = "id"

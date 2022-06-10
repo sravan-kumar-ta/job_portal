@@ -6,4 +6,6 @@ urlpatterns = [
     path('profile/add/', views.CandidateProfileView.as_view(), name="cand-addprofile"),
     path('profile/detail/', views.CandidateProfileDetailView.as_view(), name="cand-profdetail"),
     path('profile/change/', views.CandidateProfileEditView.as_view(), name="cand-profedit"),
+    path('jobs/all/', views.CandidateJobListView.as_view(), name="cand-joblist"),
+    path('jobs/details/<int:id>/', views.CandidateJobDetailView.as_view(), name="cand-detailjob"),
 ]
