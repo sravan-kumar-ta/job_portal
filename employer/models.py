@@ -33,3 +33,17 @@ class CompanyProfile(models.Model):
     location = models.CharField(max_length=100)
     services = models.CharField(max_length=100)
     description = models.CharField(max_length=100)
+
+
+class Applications(models.Model):
+    applicant = models.ForeignKey(User, on_delete=models.CASCADE, related_name="applicant")
+    job = models.ForeignKey(Job, on_delete=models.CASCADE)
+    options = (
+        ("applied", "applied"),
+        ("accepted", "accepted"),
+        ("rejected", "rejected"),
+        ("pending", "pending"),
+        ("cancelled", "cancelled"),
+    )
+    status = models.CharField(choices=options, default="applied", max_length=120)
+    date = models.DateTimeField(auto_now_add=True)

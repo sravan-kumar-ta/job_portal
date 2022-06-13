@@ -1,9 +1,10 @@
+from django.contrib import messages
 from django.shortcuts import render, redirect
 from django.urls import reverse_lazy
 from django.views.generic import TemplateView, CreateView, FormView, ListView, DetailView
 from candidate.forms import CandidateProfileForm, CandidateProfileUpdateForm
 from candidate.models import CandidateProfile
-from employer.models import User, Job
+from employer.models import User, Job, Applications
 
 
 class CandidateHomeView(TemplateView):
@@ -18,6 +19,7 @@ class CandidateProfileView(CreateView):
 
     def form_valid(self, form):
         form.instance.user = self.request.user
+        messages.success(self.request, "Your profile has been added..!")
         return super().form_valid(form)
 
 
@@ -50,9 +52,10 @@ class CandidateProfileEditView(FormView):
             user.last_name = last_name
             user.phone = phone
             user.save()
-
+            messages.success(request, "Your profile has been updated..!")
             return redirect("cand-home")
         else:
+            messages.error(request, "Error occurred while updating profile..!")
             return render(request, self.template_name, {"form": form})
 
 
@@ -62,7 +65,7 @@ class CandidateJobListView(ListView):
     template_name = "candidates/joblist.html"
 
     def get_queryset(self):
-        return self.model.objects.all().order_by("-created_date")
+        return self.model.objects.filter(is_active=True).order_by("-created_date")
 
 
 class CandidateJobDetailView(DetailView):
@@ -70,3 +73,12 @@ class CandidateJobDetailView(DetailView):
     context_object_name = "job"
     template_name = "candidates/jobdetail.html"
     pk_url_kwarg = "id"
+
+
+def apply_now(request, *args, **kwargs):
+    user = request.user
+    job_id = kwargs.get("id")
+    job = Job.objects.get(id=job_id)
+    Applications.objects.create(applicant=user, job=job)
+    messages.success(request, "Your applications has been posted successfully..!")
+    return redirect("cand-home")

@@ -13,6 +13,11 @@ class JobForm(forms.ModelForm):
             'last_date': forms.DateInput(attrs={'class': "form-control", "type": "date"})
         }
 
+    # def clean(self):
+    #     cleaned_data = super().clean()
+    #     l_date = cleaned_data.get("last_date")
+    #
+    #
 
 class SignUpForm(UserCreationForm):
     password1 = forms.CharField(widget=forms.PasswordInput())
