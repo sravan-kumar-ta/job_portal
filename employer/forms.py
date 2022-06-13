@@ -1,6 +1,7 @@
 from django import forms
+from django.utils.translation import gettext as _
+
 from .models import Job, CompanyProfile
-# from django.contrib.auth.models import User
 from django.contrib.auth.forms import UserCreationForm
 from employer.models import User
 
@@ -8,41 +9,125 @@ from employer.models import User
 class JobForm(forms.ModelForm):
     class Meta:
         model = Job
-        exclude = ('company', 'created_date', 'is_active')
+        exclude = ('company', 'created_date')
         widgets = {
-            'last_date': forms.DateInput(attrs={'class': "form-control", "type": "date"})
+            'job_title': forms.TextInput(attrs={
+                "class": "form-control form-control-user",
+                "placeholder": "Enter job title..",
+            }),
+            'location': forms.TextInput(attrs={
+                "class": "form-control form-control-user",
+                "placeholder": "Location..",
+            }),
+            'salary': forms.NumberInput(attrs={
+                "class": "form-control form-control-user",
+                "placeholder": "Salary..",
+            }),
+            'experience': forms.NumberInput(attrs={
+                "class": "form-control form-control-user",
+                "placeholder": "How many years of experience..",
+            }),
+            'last_date': forms.DateInput(attrs={
+                'class': "form-control form-control-user",
+                "type": "date"
+            }),
+            'is_active': forms.CheckboxInput(attrs={
+                'class': "form-control form-control-user",
+            })
         }
 
 
 class SignUpForm(UserCreationForm):
-    password1 = forms.CharField(widget=forms.PasswordInput())
-    password2 = forms.CharField(widget=forms.PasswordInput())
+    password1 = forms.CharField(widget=forms.PasswordInput(attrs={
+        "class": "form-control",
+        "placeholder": "Password",
+        "id": "password1"
+    }))
+    password2 = forms.CharField(widget=forms.PasswordInput(attrs={
+        "class": "form-control",
+        "placeholder": "Confirm Password",
+        "id": "password2"
+    }))
+
+    role = forms.ChoiceField(choices=User.options, widget=forms.Select(attrs={
+        "class": "form-control",
+    }), )
 
     class Meta:
         model = User
-        fields = ['first_name', 'last_name', 'email', 'username', 'password1', 'password2', 'role', 'phone']
+        fields = ['username', 'first_name', 'last_name', 'email', 'phone', 'role', 'password1', 'password2']
+        widgets = {
+            'first_name': forms.TextInput(attrs={
+                "class": "form-control",
+                "placeholder": "First Name",
+            }),
+            'last_name': forms.TextInput(attrs={
+                "class": "form-control",
+                "placeholder": "Last Name",
+            }),
+            'username': forms.TextInput(attrs={
+                "class": "form-control",
+                "placeholder": "Username",
+            }),
+            'email': forms.EmailInput(attrs={
+                "class": "form-control",
+                "placeholder": "Email",
+            }),
+            'phone': forms.TextInput(attrs={
+                "class": "form-control",
+                "placeholder": "Phone",
+            }),
+        }
 
 
 class LoginForm(forms.Form):
-    username = forms.CharField()
-    password = forms.CharField(widget=forms.PasswordInput())
+    username = forms.CharField(widget=forms.TextInput(attrs={
+        "class": "form-control form-control-user",
+        "placeholder": "Enter username...",
+    }))
+    password = forms.CharField(widget=forms.PasswordInput(attrs={
+        "class": "form-control form-control-user",
+        "placeholder": "Enter Password...",
+    }))
 
 
 class PasswordResetForm(forms.Form):
-    password1 = forms.CharField(widget=forms.PasswordInput())
-    confirm_password = forms.CharField()
+    password1 = forms.CharField(widget=forms.PasswordInput(attrs={
+        "class": "form-control",
+        "placeholder": "enter password"
+    }))
+    password2 = forms.CharField(widget=forms.PasswordInput(attrs={
+        "class": "form-control",
+        "placeholder": "confirm password"
+    }))
 
     def clean(self):
         cleaned_data = super().clean()
-        pwd1 = cleaned_data.get("password1")
-        pwd2 = cleaned_data.get("confirm_password")
+        password1 = cleaned_data.get("password1")
+        password2 = cleaned_data.get("password2")
 
-        if pwd1 != pwd2:
-            msg = "Password mismatch"
-            self.add_error("password1", msg)
+        if password1 and password2 and password1 != password2:
+            raise forms.ValidationError(_("Password mismatch! Try again..."), code="password_mismatch")
+        return cleaned_data
 
 
 class CompanyProfileForm(forms.ModelForm):
     class Meta:
         model = CompanyProfile
         exclude = ("user",)
+
+        widgets = {
+            'company_name': forms.TextInput(attrs={
+                "class": "form-control",
+                "placeholder": "First Name",
+            }),
+            'location': forms.TextInput(attrs={
+                "class": "form-control",
+            }),
+            'services': forms.TextInput(attrs={
+                "class": "form-control",
+            }),
+            'description': forms.TextInput(attrs={
+                "class": "form-control",
+            }),
+        }

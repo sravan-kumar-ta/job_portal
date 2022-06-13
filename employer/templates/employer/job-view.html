@@ -1,0 +1,89 @@
+{% extends 'employer/base.html' %}
+{% load static %}
+{% load humanize %}
+
+{% block content %}
+<!-- Page Heading -->
+<div class="d-sm-flex align-items-center justify-content-between mb-4">
+    <h1 class="h3 mb-0 text-gray-800">View Job</h1>
+    <div class="d-flex" style="margin-right: 20px">
+        /<a href="{% url 'employer:home' %}">home</a>/
+        <a href="#">view job</a>/
+    </div>
+</div>
+
+<!-- DataTales Example -->
+<div class="row">
+    <div class="col-lg-8 col-xl-5">
+        <!-- Basic Card Example -->
+        <div class="card shadow">
+            <div class="card-header py-3">
+                <h6 class="m-0 font-weight-bold text-primary">{{ job.job_title }}</h6>
+            </div>
+            <div class="card-body">
+                <table cellpadding="10px">
+                    <tr>
+                        <td>Job role :</td>
+                        <td class="text-primary">{{ job.job_title }}</td>
+                    </tr>
+                    <tr>
+                        <td>Job Location :</td>
+                        <td class="text-primary">{{ job.location }}</td>
+                    </tr>
+                    <tr>
+                        <td>Salary :</td>
+                        <td class="text-primary">{{ job.salary }}</td>
+                    </tr>
+                    <tr>
+                        <td>Experience :</td>
+                        <td class="text-primary">{{ job.experience }} Years</td>
+                    </tr>
+                    <tr>
+                        <td>Posted date :</td>
+                        <td class="text-primary">{{ job.created_date|naturalday }}</td>
+                    </tr>
+                    <tr>
+                        <td>End date :</td>
+                        <td class="text-primary">{{ job.last_date|naturalday }}</td>
+                    </tr>
+                    <tr>
+                        <td>Status :</td>
+                        {% if job.is_active %}
+                        <td class="text-primary">Active</td>
+                        {% else %}
+                        <td class="text-primary">Not Active</td>
+                        {% endif %}
+                    </tr>
+                </table>
+                <div class="row justify-content-between mt-3">
+                    <div class="col-3">
+                    <a href="{% url 'employer:job-delete' job.id %}" class="btn btn-danger btn-icon-split btn-sm">
+                        <span class="icon text-white-50">
+                            <i class="fas fa-trash"></i>
+                        </span>
+                        <span class="text">Delete&nbspJob</span>
+                    </a>
+                    </div>
+                    <div class="col-3">
+                    <a href="{% url 'employer:job-update' job.id %}" class="btn btn-warning btn-icon-split btn-sm">
+                        <span class="icon text-white-50">
+                            <i class="fas fa-exclamation-triangle"></i>
+                        </span>
+                        <span class="text">Update&nbspJob</span>
+                    </a>
+                    </div>
+                    <div class="col-3">
+                    <a href="{% url 'employer:all-jobs' %}" class="btn btn-success btn-icon-split btn-sm">
+                        <span class="icon text-white-50">
+                            <i class="fas fa-check"></i>
+                        </span>
+                        <span class="text">Back</span>
+                    </a>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+{% endblock %}

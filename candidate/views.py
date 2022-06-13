@@ -62,7 +62,7 @@ class CandidateJobListView(ListView):
     template_name = "candidates/joblist.html"
 
     def get_queryset(self):
-        return self.model.objects.all().order_by("-created_date")
+        return self.model.objects.filter(is_active=True).order_by("-created_date")
 
 
 class CandidateJobDetailView(DetailView):

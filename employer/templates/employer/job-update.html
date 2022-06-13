@@ -1,0 +1,44 @@
+{% extends 'employer/base.html' %}
+{% load static %}
+
+{% block content %}
+<!-- Page Heading -->
+<div class="d-sm-flex align-items-center justify-content-between mb-4">
+    <h1 class="h3 mb-0 text-gray-800">Update job here!</h1>
+    <div class="d-flex" style="margin-right: 20px">
+        /<a href="{% url 'employer:home' %}">home</a>/
+        <a href="#">update job</a>/
+    </div>
+</div>
+
+<!-- DataTales Example -->
+<div class="row">
+    <div class="col-lg-6">
+        <div class="p-5">
+            <form class="user" method="post">
+                {% csrf_token %}
+                {% for field in form %}
+                <div class="form-group">
+                    {{ field }}
+                </div>
+                {% endfor %}
+                <input type="submit" value="Update Job" class="btn btn-primary btn-user btn-block">
+
+                {% if messages %}
+                    {% for message in messages %}
+                        <div class="container alert alert-dismissible fade show" role="alert" style="color: #FF6363; border: 1px solid; margin-top: 20px">
+                            {{ message }}
+                            <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+                                <span aria-hidden="true">&times;</span>
+                            </button>
+                        </div>
+                    {% endfor %}
+                {% endif %}
+
+            </form>
+            <hr>
+        </div>
+    </div>
+</div>
+
+{% endblock %}
