@@ -74,6 +74,12 @@ class CandidateJobDetailView(DetailView):
     template_name = "candidates/jobdetail.html"
     pk_url_kwarg = "id"
 
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        is_applied = Applications.objects.filter(applicant=self.request.user, job=self.object)
+        context['is_applied'] = is_applied
+        return context
+
 
 def apply_now(request, *args, **kwargs):
     user = request.user
@@ -82,3 +88,12 @@ def apply_now(request, *args, **kwargs):
     Applications.objects.create(applicant=user, job=job)
     messages.success(request, "Your applications has been posted successfully..!")
     return redirect("cand-home")
+
+
+class ApplicationListView(ListView):
+    model = Applications
+    template_name = 'candidates/cand-applications.html'
+    context_object_name = 'applications'
+
+    def get_queryset(self):
+        return Applications.objects.filter(applicant=self.request.user)

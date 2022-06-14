@@ -47,3 +47,6 @@ class Applications(models.Model):
     )
     status = models.CharField(choices=options, default="applied", max_length=120)
     date = models.DateTimeField(auto_now_add=True)
+
+    class Meta:
+        unique_together = ("applicant", 'job')

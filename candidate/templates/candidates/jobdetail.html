@@ -17,7 +17,11 @@
             <div class="row">
                 <div class="col-4"></div>
                 <div class="col-4">
+                    {% if is_applied %}
+                    <a href="#" class="btn btn-outline-info mb-2">Applied</a>
+                    {% else %}
                     <a href="{% url 'applynow' job.id %}" class="btn btn-outline-info mb-2">Apply now</a>
+                    {% endif %}
                 </div>
                 <div class="col-4"></div>
             </div>
