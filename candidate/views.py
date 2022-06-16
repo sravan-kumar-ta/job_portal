@@ -3,8 +3,8 @@ from django.shortcuts import render, redirect
 from django.urls import reverse_lazy
 from django.views.generic import TemplateView, CreateView, FormView, ListView, DetailView
 from candidate.forms import CandidateProfileForm, CandidateProfileUpdateForm
-from candidate.models import CandidateProfile
-from employer.models import User, Job, Applications
+from candidate.models import CandidateProfiles
+from employer.models import CustomUser, Jobs, Applications
 
 
 class CandidateHomeView(TemplateView):
@@ -12,7 +12,7 @@ class CandidateHomeView(TemplateView):
 
 
 class CandidateProfileView(CreateView):
-    model = CandidateProfile
+    model = CandidateProfiles
     form_class = CandidateProfileForm
     template_name = "candidates/can-profile.html"
     success_url = reverse_lazy("cand-home")
@@ -32,14 +32,14 @@ class CandidateProfileEditView(FormView):
     form_class = CandidateProfileUpdateForm
 
     def get(self, request, *args, **kwargs):
-        prodetails = CandidateProfile.objects.get(user=request.user)
+        prodetails = CandidateProfiles.objects.get(user=request.user)
         form = CandidateProfileUpdateForm(instance=prodetails, initial={"first_name": request.user.first_name,
                                                                         "last_name": request.user.last_name,
                                                                         "phone": request.user.phone})
         return render(request, self.template_name, {"form": form})
 
     def post(self, request, *args, **kwargs):
-        prodetails = CandidateProfile.objects.get(user=request.user)
+        prodetails = CandidateProfiles.objects.get(user=request.user)
         form = self.form_class(instance=prodetails, data=request.POST, files=request.FILES)
         if form.is_valid():
             first_name = form.cleaned_data.pop("first_name")
@@ -47,7 +47,7 @@ class CandidateProfileEditView(FormView):
             phone = form.cleaned_data.pop("phone")
             form.save()
 
-            user = User.objects.get(id=request.user.id)
+            user = CustomUser.objects.get(id=request.user.id)
             user.first_name = first_name
             user.last_name = last_name
             user.phone = phone
@@ -60,7 +60,7 @@ class CandidateProfileEditView(FormView):
 
 
 class CandidateJobListView(ListView):
-    model = Job
+    model = Jobs
     context_object_name = "jobs"
     template_name = "candidates/joblist.html"
 
@@ -69,7 +69,7 @@ class CandidateJobListView(ListView):
 
 
 class CandidateJobDetailView(DetailView):
-    model = Job
+    model = Jobs
     context_object_name = "job"
     template_name = "candidates/jobdetail.html"
     pk_url_kwarg = "id"
@@ -84,7 +84,7 @@ class CandidateJobDetailView(DetailView):
 def apply_now(request, *args, **kwargs):
     user = request.user
     job_id = kwargs.get("id")
-    job = Job.objects.get(id=job_id)
+    job = Jobs.objects.get(id=job_id)
     Applications.objects.create(applicant=user, job=job)
     messages.success(request, "Your applications has been posted successfully..!")
     return redirect("cand-home")

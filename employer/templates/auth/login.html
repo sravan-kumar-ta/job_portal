@@ -1,0 +1,36 @@
+{% extends 'auth/base.html' %}
+
+
+{% block content %}
+<div class="text-center">
+    <h1 class="h4 text-gray-900 mb-4">Welcome Back!</h1>
+</div>
+
+{% if messages %}
+    {% for message in messages %}
+        <div class="container alert alert-dismissible fade show" role="alert" style="color: #FF6363; border: 2px solid; margin-top: 20px">
+            {{ message }}
+            <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+                <span aria-hidden="true">&times;</span>
+            </button>
+        </div>
+    {% endfor %}
+{% endif %}
+
+<form class="user" method="post">
+    {% csrf_token %}
+    {% for field in form %}
+    <div class="form-group">
+        {{ field }}
+    </div>
+    {% endfor %}
+    <input type="submit" value="Login" class="btn btn-primary btn-user btn-block">
+</form>
+<hr>
+<div class="text-center">
+    <a class="small" href="#">Forgot Password?</a>
+</div>
+<div class="text-center">
+    <a class="small" href="{% url 'employer:sign-up' %}">Create an Account!</a>
+</div>
+{% endblock %}

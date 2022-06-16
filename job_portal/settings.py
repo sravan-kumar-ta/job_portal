@@ -39,6 +39,7 @@ INSTALLED_APPS = [
     'django.contrib.staticfiles',
     'employer',
     'candidate',
+    'django.contrib.humanize'
 ]
 
 MIDDLEWARE = [
@@ -126,4 +127,4 @@ STATIC_URL = '/static/'
 
 DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 
-AUTH_USER_MODEL = 'employer.User'
+AUTH_USER_MODEL = 'employer.CustomUser'

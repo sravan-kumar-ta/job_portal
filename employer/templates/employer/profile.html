@@ -1,0 +1,73 @@
+{% extends 'employer/base.html' %}
+{% load static %}
+
+{% block content %}
+<!-- Page Heading -->
+
+<!-- DataTales Example -->
+<div class="row">
+    <div class="col-lg-8 col-xl-5">
+        <!-- Basic Card Example -->
+        <div class="card shadow">
+            <div class="card-header py-3">
+                <h6 class="m-0 font-weight-bold text-primary">My Profile</h6>
+            </div>
+            <div class="card-body">
+                <div class="content d-flex justify-content-between">
+                    <table cellpadding="10px">
+                        <tr>
+                            <td>Company name :</td>
+                            <td class="text-primary">{{ request.user.employer.company_name }}</td>
+                        </tr>
+                        <tr>
+                            <td>Company location :</td>
+                            <td class="text-primary">{{ request.user.employer.location }}</td>
+                        </tr>
+                        <tr>
+                            <td>Username :</td>
+                            <td class="text-primary">{{ request.user.username }}</td>
+                        </tr>
+                        <tr>
+                            <td>Services :</td>
+                            <td class="text-primary">{{ request.user.employer.services }}</td>
+                        </tr>
+                        <tr>
+                            <td>Description :</td>
+                            <td class="text-primary">{{ request.user.employer.description }}</td>
+                        </tr>
+                        <tr>
+                            <td>Phone number :</td>
+                            <td class="text-primary">{{ request.user.phone }}</td>
+                        </tr>
+                    </table>
+                    <div style="height: 150px; width: 150px;" class="border d-flex justify-content-center">
+                        <img src="{{ request.user.employer.logo.url }}" alt="no logo found">
+                    </div>
+                </div>
+                <div class="row justify-content-center mt-3">
+                    {% if request.user.employer %}
+                    <div class="col-3">
+                        <a href="{% url 'employer:profile-update' request.user.employer.id %}" class="btn btn-warning btn-icon-split btn-sm">
+                            <span class="icon text-white-50">
+                                <i class="fas fa-exclamation-triangle"></i>
+                            </span>
+                            <span class="text">Update&nbspProfile</span>
+                        </a>
+                    </div>
+                    {% else %}
+                    <div class="col-3">
+                        <a href="{% url 'employer:profile-add' %}" class="btn btn-warning btn-icon-split btn-sm">
+                            <span class="icon text-white-50">
+                                <i class="fas fa-exclamation-triangle"></i>
+                            </span>
+                            <span class="text">Add&nbspProfile</span>
+                        </a>
+                    </div>
+                    {% endif %}
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+{% endblock %}

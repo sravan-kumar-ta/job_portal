@@ -1,10 +1,10 @@
 from django import forms
-from candidate.models import CandidateProfile
+from candidate.models import CandidateProfiles
 
 
 class CandidateProfileForm(forms.ModelForm):
     class Meta:
-        model = CandidateProfile
+        model = CandidateProfiles
         exclude = ("user",)
         widgets = {
             "profile_pic": forms.FileInput(attrs={"class": "form-control rounded-pill"}),
@@ -21,7 +21,7 @@ class CandidateProfileUpdateForm(forms.ModelForm):
     phone = forms.CharField()
 
     class Meta:
-        model = CandidateProfile
+        model = CandidateProfiles
         fields = [
             "first_name",
             "last_name",
@@ -32,4 +32,3 @@ class CandidateProfileUpdateForm(forms.ModelForm):
             "skills",
             "experience"
         ]
-

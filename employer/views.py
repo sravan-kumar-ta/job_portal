@@ -1,107 +1,100 @@
 from django.contrib.auth import authenticate, login, logout
-# from django.contrib.auth.models import User
+from django.contrib import messages
+from django.contrib.messages.views import SuccessMessageMixin
 from django.shortcuts import render, redirect
 from django.urls import reverse_lazy
-from django.views import View
 from django.views.generic import TemplateView, ListView, CreateView, DetailView, UpdateView, DeleteView, FormView
 
-from employer.forms import JobForm, SignUpForm, LoginForm, CompanyProfileForm
-from employer.models import Job, CompanyProfile, User
+from employer.forms import JobForm, SignUpForm, LoginForm, CompanyProfileForm, PasswordResetForm
+from employer.models import Jobs, CompanyProfiles, CustomUser
 
 
 # Create your views here.
 class EmployerHomeView(TemplateView):
-    template_name = "emp-home.html"
+    template_name = "employer/dashboard.html"
 
 
-class AddJobView(CreateView):
-    model = Job
+def home(request):
+    if request.user.is_authenticated:
+        if request.user.role == "employer":
+            return render(request, "employer/dashboard.html")
+        else:
+            return render(request, "candidates/can-home.html")
+    else:
+        return redirect("employer:sign-in")
+
+
+class AddJobView(CreateView, SuccessMessageMixin):
+    model = Jobs
     form_class = JobForm
-    template_name = "emp-add_job.html"
-    success_url = reverse_lazy("emp-alljobs")
+    template_name = "employer/job-add.html"
+    success_url = reverse_lazy("employer:all-jobs")
+    error_message = "Invalid form request"
+    success_message = "Job added successfully.."
 
     def form_valid(self, form):
         form.instance.company = self.request.user
+        messages.success(self.request, self.success_message)
         return super().form_valid(form)
-    # def get(self, request):
-    #     form = JobForm()
-    #     return render(request, "emp-add_job.html", {"form": form})
-    #
-    # def post(self, request):
-    #     form = JobForm(request.POST)
-    #     if form.is_valid():
-    #         form.save()
-    #         return redirect('emp-alljobs')
-    #     else:
-    #         return render(request, "emp-add_job.html", {"form": form})
+
+    def form_invalid(self, form):
+        messages.error(self.request, self.error_message)
+        return super().form_invalid(form)
 
 
 class ListJobsView(ListView):
-    model = Job
+    model = Jobs
     context_object_name = 'jobs'
-    template_name = 'emp-list_jobs.html'
+    template_name = "employer/job-manage.html"
 
     def get_queryset(self):
-        return Job.objects.filter(company=self.request.user)
-
-    # def get(self, request):
-    #     jobs = Job.objects.filter(company=request.user)
-    #     return render(request, 'emp-list_jobs.html', {'jobs': jobs})
+        return Jobs.objects.filter(company=self.request.user).order_by("-id")
 
 
 class JobDetailView(DetailView):
-    model = Job
+    model = Jobs
     context_object_name = 'job'
-    template_name = 'emp-detail_job.html'
+    template_name = "employer/job-view.html"
     pk_url_kwarg = 'id'
-    # def get(self, request, id):
-    #     job = Job.objects.get(id=id)
-    #     return render(request, 'emp-detail_job.html', {'job': job})
 
 
 class JobEditView(UpdateView):
-    model = Job
+    model = Jobs
     form_class = JobForm
-    template_name = 'emp-editjob.html'
+    template_name = "employer/job-update.html"
     pk_url_kwarg = 'id'
-    success_url = reverse_lazy('emp-alljobs')
 
-    # def get(self, request, id):
-    #     job = Job.objects.get(id=id)
-    #     form = JobForm(instance=job)
-    #     return render(request, 'emp-editjob.html', {'form': form})
-    #
-    # def post(self, request, id):
-    #     job = Job.objects.get(id=id)
-    #     form = JobForm(request.POST, instance=job)
-    #     if form.is_valid():
-    #         form.save()
-    #         return redirect('emp-alljobs')
-    #     else:
-    #         return render(request, 'emp-editjob.html', {'form': form})
+    def get_success_url(self):
+        messages.success(self.request, "Job updated..")
+        return reverse_lazy('employer:job-detail', kwargs={'id': self.object.id})
 
 
-class JobDeleteView(DeleteView):
-    model = Job
-    template_name = 'emp-jobdelete.html'
-    success_url = reverse_lazy('emp-alljobs')
+class JobDeleteView(DeleteView, SuccessMessageMixin):
+    model = Jobs
     pk_url_kwarg = 'id'
-    # def get(self, request, id):
-    #     job = Job.objects.get(id=id)
-    #     job.delete()
-    #     return redirect('emp-alljobs')
+    template_name = 'employer/job-delete.html'
+    success_message = "Job deleted"
+    success_url = reverse_lazy('employer:all-jobs')
+
+    def get_success_url(self):
+        messages.success(self.request, self.success_message)
+        return super().get_success_url()
 
 
 class SignUpView(CreateView):
-    model = User
+    model = CustomUser
     form_class = SignUpForm
-    template_name = 'user_signup.html'
-    success_url = reverse_lazy('signin')
+    template_name = 'auth/register.html'
+    success_url = reverse_lazy('employer:sign-in')
+
+    def form_invalid(self, form):
+        messages.error(self.request, "Invalid registration")
+        return super().form_invalid(form)
 
 
 class LogInView(FormView):
     form_class = LoginForm
-    template_name = 'login.html'
+    template_name = "auth/login.html"
 
     def post(self, request, *args, **kwargs):
         form = LoginForm(request.POST)
@@ -112,60 +105,51 @@ class LogInView(FormView):
             if user:
                 login(request, user)
                 if request.user.role == "employer":
-                    return redirect('emp-alljobs')
+                    return redirect('employer:home')
                 elif request.user.role == "candidate":
                     return redirect("cand-home")
             else:
-                return render(request, 'login.html', {'form': form})
+                messages.error(request, "Invalid credentials...")
+                return render(request, 'auth/login.html', {'form': form})
 
 
 def signout_view(request):
     logout(request)
-    return redirect('signin')
+    return redirect('employer:sign-in')
 
 
 class ChangePasswordView(TemplateView):
-    template_name = "change_password.html"
+    template_name = "auth/password-reset-request.html"
 
     def post(self, request, *args, **kwargs):
-        pwd = request.POST.get("pwd")
-        uname = request.user
-        user = authenticate(request, username=uname, password=pwd)
+        password = request.POST.get("password")
+        username = request.user
+        user = authenticate(request, username=username, password=password)
         if user:
-            return redirect("password-reset")
+            return redirect("employer:password-reset")
         else:
+            messages.error(request, "Wrong password! Please try again...")
             return render(request, self.template_name)
 
 
-class PasswordResetView(TemplateView):
-    template_name = "password_reset.html"
+class PasswordResetView(FormView):
+    form_class = PasswordResetForm
+    template_name = "auth/password-reset.html"
+    success_url = reverse_lazy("employer:sign-out")
 
-    def post(self, request, *args, **kwargs):
-        pwd1 = request.POST.get("pwd1")
-        pwd2 = request.POST.get("pwd2")
-        if pwd1 == pwd2:
-            user = User.objects.get(username="sravan")
-            user.set_password('sravan')
-            user.save()
-            return redirect('signin')
-        else:
-            return render(request, self.template_name)
+    def form_valid(self, form):
+        new_password = form.cleaned_data.get("password1")
+        user = CustomUser.objects.get(username=self.request.user)
+        user.set_password(new_password)
+        user.save()
+        return super().form_valid(form)
 
 
 class CompanyProfileView(CreateView):
-    model = CompanyProfile
+    model = CompanyProfiles
     form_class = CompanyProfileForm
-    template_name = "emp_addprofile.html"
-    success_url = reverse_lazy("emp-home")
-
-    # def post(self, request, *args, **kwargs):
-    #     form = CompanyProfileForm(request.POST, files=request.FILES)
-    #     if form.is_valid():
-    #         form.instance.user = request.user
-    #         form.save()
-    #         return redirect('emp-home')
-    #     else:
-    #         return render(request, self.template_name, {"form": form})
+    template_name = "employer/profile-add.html"
+    success_url = reverse_lazy("employer:home")
 
     def form_valid(self, form):
         form.instance.user = self.request.user
@@ -173,12 +157,12 @@ class CompanyProfileView(CreateView):
 
 
 class EmpViewProfileView(TemplateView):
-    template_name = "emp-profile.html"
+    template_name = "employer/profile.html"
 
 
 class EmpProfileEditVIew(UpdateView):
-    model = CompanyProfile
+    model = CompanyProfiles
     form_class = CompanyProfileForm
     pk_url_kwarg = 'id'
-    template_name = "emp_editprofile.html"
-    success_url = reverse_lazy("emp-viewprofile")
+    template_name = "employer/profile-update.html"
+    success_url = reverse_lazy("employer:profile-view")

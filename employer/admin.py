@@ -1,8 +1,8 @@
 from django.contrib import admin
-from .models import Job, User, CompanyProfile, Applications
+from .models import Jobs, CustomUser, CompanyProfiles, Applications
 
 # Register your models here.
-admin.site.register(Job)
-admin.site.register(User)
-admin.site.register(CompanyProfile)
+admin.site.register(Jobs)
+admin.site.register(CustomUser)
+admin.site.register(CompanyProfiles)
 admin.site.register(Applications)

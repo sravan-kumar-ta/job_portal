@@ -1,19 +1,24 @@
 from django.urls import path
-from . import views
+from employer import views
+
+app_name = "employer"
 
 urlpatterns = [
-    path('', views.EmployerHomeView.as_view(), name="emp-home"),
-    path('add_job', views.AddJobView.as_view(), name="emp-add_job"),
-    path('view_jobs', views.ListJobsView.as_view(), name="emp-alljobs"),
-    path('jobs/detail/<int:id>/', views.JobDetailView.as_view(), name="emp-jobdetail"),
-    path('jobs/change/<int:id>/', views.JobEditView.as_view(), name="emp-jobedit"),
-    path('jobs/remove/<int:id>/', views.JobDeleteView.as_view(), name="emp-jobdelete"),
-    path('users/account/signup/', views.SignUpView.as_view(), name='signup'),
-    path('users/account/signin/', views.LogInView.as_view(), name="signin"),
-    path('users/account/signout/', views.signout_view, name="signout"),
-    path('users/password/change/', views.ChangePasswordView.as_view(), name="password-change"),
-    path('users/password/reset/', views.PasswordResetView.as_view(), name="password-reset"),
-    path('profile/details/', views.EmpViewProfileView.as_view(), name="emp-viewprofile"),
-    path('profile/add/', views.CompanyProfileView.as_view(), name='emp-addprofile'),
-    path('profile/edit/<int:id>/', views.EmpProfileEditVIew.as_view(), name="emp-editprofile")
+    # path('', views.EmployerHomeView.as_view(), name="home"),
+    path('', views.home, name="home"),
+    path('add_job/', views.AddJobView.as_view(), name="add-job"),
+    path('view_jobs/', views.ListJobsView.as_view(), name="all-jobs"),
+    path('job/<int:id>/', views.JobDetailView.as_view(), name="job-detail"),
+    path('job/<int:id>/update/', views.JobEditView.as_view(), name="job-update"),
+    path('job/<int:id>/delete/', views.JobDeleteView.as_view(), name="job-delete"),
+
+    path('accounts/signup/', views.SignUpView.as_view(), name='sign-up'),
+    path('accounts/sign_in/', views.LogInView.as_view(), name="sign-in"),
+    path('accounts/sign_out/', views.signout_view, name="sign-out"),
+    path('password_change/', views.ChangePasswordView.as_view(), name="password-reset-request"),
+    path('password_reset/', views.PasswordResetView.as_view(), name="password-reset"),
+
+    path('profile/', views.EmpViewProfileView.as_view(), name="profile-view"),
+    path('profile/add/', views.CompanyProfileView.as_view(), name='profile-add'),
+    path('profile/<int:id>/update/', views.EmpProfileEditVIew.as_view(), name="profile-update")
 ]

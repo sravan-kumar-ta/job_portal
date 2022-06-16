@@ -1,0 +1,38 @@
+{% extends 'employer/base.html' %}
+{% load static %}
+
+{% block content %}
+<!-- Page Heading -->
+<div class="d-sm-flex align-items-center justify-content-between mb-4">
+    <h1 class="h3 mb-0 text-gray-800">Add new job here!</h1>
+    <div class="d-flex" style="margin-right: 20px">
+        /<a href="{% url 'employer:home' %}">home</a>/
+        <a href="#">add job</a>/
+    </div>
+</div>
+
+<!-- DataTales Example -->
+<div class="row">
+    <div class="col-lg-6">
+        <div class="p-4 rounded border border-info">
+            <form class="user" method="post" enctype="multipart/form-data">
+                {% csrf_token %}
+                <table class="table">
+                {% for field in form %}
+                <div class="form-group">
+                    <tr>
+                        <td>{{ field.label }}:</td>
+                        <td>{{ field }}</td>
+                    </tr>
+                </div>
+                {% endfor %}
+                </table>
+                <input type="submit" value="Update Profile" class="btn btn-success btn-user btn-block">
+
+            </form>
+            <hr>
+        </div>
+    </div>
+</div>
+
+{% endblock %}
