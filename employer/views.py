@@ -10,18 +10,18 @@ from employer.models import Jobs, CompanyProfiles, CustomUser
 
 
 # Create your views here.
-class EmployerHomeView(TemplateView):
-    template_name = "employer/dashboard.html"
-
-
 def home(request):
     if request.user.is_authenticated:
         if request.user.role == "employer":
-            return render(request, "employer/dashboard.html")
+            return redirect("employer:home")
         else:
-            return render(request, "candidates/can-home.html")
+            return redirect("candidate:home")
     else:
         return redirect("employer:sign-in")
+
+
+class EmployerHomeView(TemplateView):
+    template_name = "employer/dashboard.html"
 
 
 class AddJobView(CreateView, SuccessMessageMixin):
@@ -105,9 +105,9 @@ class LogInView(FormView):
             if user:
                 login(request, user)
                 if request.user.role == "employer":
-                    return redirect('employer:home')
+                    return redirect("employer:home")
                 elif request.user.role == "candidate":
-                    return redirect("cand-home")
+                    return redirect("candidate:home")
             else:
                 messages.error(request, "Invalid credentials...")
                 return render(request, 'auth/login.html', {'form': form})
@@ -121,7 +121,7 @@ def signout_view(request):
 class ChangePasswordView(TemplateView):
     template_name = "auth/password-reset-request.html"
 
-    def post(self, request, *args, **kwargs):
+    def post(self, request):
         password = request.POST.get("password")
         username = request.user
         user = authenticate(request, username=username, password=password)

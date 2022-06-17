@@ -4,8 +4,8 @@ from employer import views
 app_name = "employer"
 
 urlpatterns = [
-    # path('', views.EmployerHomeView.as_view(), name="home"),
-    path('', views.home, name="home"),
+    path('', views.home),
+    path('home', views.EmployerHomeView.as_view(), name="home"),
     path('add_job/', views.AddJobView.as_view(), name="add-job"),
     path('view_jobs/', views.ListJobsView.as_view(), name="all-jobs"),
     path('job/<int:id>/', views.JobDetailView.as_view(), name="job-detail"),

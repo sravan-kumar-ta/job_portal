@@ -1,0 +1,73 @@
+{% extends 'candidate/base.html' %}
+{% load static %}
+
+{% block content %}
+<main>
+    <div class="job-listing-area pt-50 pb-120">
+        <div class="container">
+            <div class="row">
+                <div class="col-xl-6 col-lg-8 col-md-10">
+                    <div class="profile px-4 py-3">
+                        <div class="d-flex justify-content-between">
+                        <h1>Profile</h1>
+                            {% if messages %}
+                                {% for message in messages %}
+                                    <div class="d-flex justify-content-center alert">
+                                        <div class="px-2 alert py-2 text-center text-success" style="border: 1px solid;">
+                                            {{ message }}
+                                            <button type="button" class="close px-2" data-dismiss="alert" aria-label="Close">
+                                                <span aria-hidden="true">&times;</span>
+                                            </button>
+                                        </div>
+                                    </div>
+                                {% endfor %}
+                            {% endif %}
+                        </div>
+                        <hr>
+                        <div class="row">
+                            <div class="col-md-8">
+                                <table cellpadding="10">
+                                    <tr>
+                                        <td>Name: </td>
+                                        <td>{{ request.user.username }}</td>
+                                    </tr>
+                                    {% if request.user.candidate %}
+                                    <tr>
+                                        <td>Qualification: </td>
+                                        <td>{{ request.user.candidate.qualification }}</td>
+                                    </tr>
+                                    <tr>
+                                        <td>Skills: </td>
+                                        <td>{{ request.user.candidate.skills }}</td>
+                                    </tr>
+                                    <tr>
+                                        <td>Resume: </td>
+                                        <td>
+                                            <a href="{{ request.user.candidate.resume.url }}" class="text-info">View CV</a>
+                                        </td>
+                                    </tr>
+                                    <tr>
+                                        <td colspan="2" style="text-align: center">
+                                            <a href="{% url 'candidate:update-profile' %}" class="genric-btn success-border circle">Update Profile</a>
+                                        </td>
+                                    </tr>
+                                    {% else %}
+                                    <tr>
+                                        <td colspan="2" style="text-align: center">
+                                            <a href="{% url 'candidate:add-profile' %}" class="genric-btn success-border circle">Add Profile</a>
+                                        </td>
+                                    </tr>
+                                    {% endif %}
+                                </table>
+                            </div>
+                            <div class="col-4">
+                                <img src="{{ request.user.candidate.profile_pic.url }}" style="max-height: 300px">
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</main>
+{% endblock %}

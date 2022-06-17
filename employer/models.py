@@ -39,13 +39,13 @@ class Applications(models.Model):
     applicant = models.ForeignKey(CustomUser, on_delete=models.CASCADE, related_name='applicant')
     job = models.ForeignKey(Jobs, on_delete=models.CASCADE)
     options = (
-        ("applied", "Applied"),
-        ("accepted", "Accepted"),
-        ("rejected", "Rejected"),
-        ("pending", "Pending"),
-        ("cancelled", "Cancelled")
+        ("Applied", "applied"),
+        ("Accepted", "accepted"),
+        ("Rejected", "rejected"),
+        ("Pending", "pending"),
+        ("Cancelled", "cancelled")
     )
-    status = models.CharField(choices=options, max_length=120, default="applied")
+    status = models.CharField(choices=options, max_length=120, default="Applied")
     date = models.DateTimeField(auto_now_add=True)
 
     class Meta:
