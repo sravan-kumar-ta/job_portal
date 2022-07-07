@@ -20,5 +20,9 @@ urlpatterns = [
 
     path('profile/', views.EmpViewProfileView.as_view(), name="profile-view"),
     path('profile/add/', views.CompanyProfileView.as_view(), name='profile-add'),
-    path('profile/<int:id>/update/', views.EmpProfileEditVIew.as_view(), name="profile-update")
+    path('profile/<int:id>/update/', views.EmpProfileEditVIew.as_view(), name="profile-update"),
+
+    path('applications/<int:job_id>/', views.ApplicationListView.as_view(), name="application-list"),
+    path('application/<int:app_id>/', views.ApplicationDetailView.as_view(), name="view-application"),
+    path('application/cancel/<int:app_id>/', views.reject_application, name="cancel-application"),
 ]

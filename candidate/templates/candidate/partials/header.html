@@ -34,7 +34,7 @@
                                         <li><a href="{% url 'candidate:jobs-list' %}">Find a Jobs </a></li>
                                         <li><a href="{% url 'candidate:applications' %}">Applied jobs</a></li>
                                         {% if request.user.is_authenticated %}
-                                            <li><a href="#">{{ request.user.username }}</a>
+                                            <li><a href="#">{{ request.user.username }}  &#8893; </a>
                                                 <ul class="submenu">
                                                     <li><a href="{% url 'candidate:view-profile' %}">Profile</a></li>
                                                     <li><a href="{% url 'employer:password-reset-request' %}">Change Password</a></li>

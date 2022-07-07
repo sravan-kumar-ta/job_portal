@@ -6,7 +6,7 @@
 <!-- Page Heading -->
 <div class="d-sm-flex align-items-center justify-content-around">
     <div class="col-sm-6 d-flex justify-content-between align-items-center">
-        <h1 class="h3 mb-0 text-gray-800">Manage_Jobs</h1>
+        <h1 class="h3 mb-0 text-gray-800">Manage&nbspApplications</h1>
                 {% if messages %}
                     {% for message in messages %}
                         <a href="#" class="alert btn btn-success btn-icon-split d-flex justify-content-between mx-5">
@@ -24,7 +24,7 @@
     <div class="col-sm-6 d-sm-flex justify-content-end">
         <div class="d-flex" style="margin-right: 20px">
             /<a href="{% url 'employer:home' %}">home</a>/
-            <a href="#">manage jobs</a>/
+            <a href="#">manage applications</a>/
         </div>
     </div>
 </div>
@@ -32,42 +32,30 @@
 <!-- DataTales Example -->
 <div class="card shadow mb-4">
     <div class="card-header py-3">
-        <h6 class="m-0 font-weight-bold text-primary">DataTables of Job</h6>
+        <h6 class="m-0 font-weight-bold text-primary">DataTables of Applications</h6>
     </div>
+    {% if applications %}
     <div class="card-body">
         <div class="table-responsive">
             <table class="table table-bordered" id="dataTable" width="100%" cellspacing="0">
                 <thead>
                     <tr>
                         <th>Index</th>
-                        <th>Job Title</th>
-                        <th>End date</th>
-                        <th>Salary</th>
-                        <th>Active or not</th>
+                        <th>Applicant</th>
+                        <th>Date of apply</th>
+                        <th>Status</th>
                         <th>Action</th>
                     </tr>
                 </thead>
                 <tbody>
-                    {% for job in jobs %}
+                    {% for application in applications %}
                     <tr>
                         <td>{{ forloop.counter }}</td>
-                        <td>{{ job.job_title }}</td>
-                        <td>{{ job.last_date|naturalday }}</td>
-                        <td>{{ job.salary|intcomma  }}</td>
+                        <td>{{ application.applicant }}</td>
+                        <td>{{ application.date|naturalday }}</td>
+                        <td>{{ application.status }}</td>
                         <td>
-                            {% if job.is_active %}
-                            <button class="btn btn-success btn-circle btn-sm">
-                                <i class="fas fa-check"></i>
-                            </button>
-                            {% else %}
-                            <button class="btn btn-danger btn-circle btn-sm">
-                                <i class="fas fa-times"></i>
-                            </button>
-                            {% endif %}
-                        </td>
-                        <td>
-                        <a href="{% url 'employer:job-detail' job.id %}" class="btn btn-outline-primary">Edit Job</a>
-                        <a href="{% url 'employer:application-list' job.id %}" class="btn btn-outline-primary">Applications</a>
+                            <a href="{% url 'employer:view-application' application.id %}" class="btn btn-outline-primary">View application</a>
                         </td>
                     </tr>
                     {% endfor %}
@@ -75,6 +63,9 @@
             </table>
         </div>
     </div>
+    {% else %}
+    <h4 class="px-3 py-1">No applications</h4>
+    {% endif %}
 </div>
 
 {% endblock %}

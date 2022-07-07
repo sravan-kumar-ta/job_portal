@@ -1,16 +1,20 @@
 from django.contrib import messages
-from django.shortcuts import render, redirect, get_object_or_404
+from django.shortcuts import render, redirect
 from django.urls import reverse_lazy
+from django.utils.decorators import method_decorator
 from django.views.generic import TemplateView, CreateView, FormView, ListView, DetailView
 from candidate.forms import CandidateProfileForm, CandidateProfileUpdateForm
 from candidate.models import CandidateProfiles
+from employer.decorators import signin_required
 from employer.models import CustomUser, Jobs, Applications
 
 
+@method_decorator(signin_required, name='dispatch')
 class CandidateHomeView(TemplateView):
     template_name = "candidate/home.html"
 
 
+@method_decorator(signin_required, name='dispatch')
 class CandidateProfileView(CreateView):
     model = CandidateProfiles
     form_class = CandidateProfileForm
@@ -23,10 +27,12 @@ class CandidateProfileView(CreateView):
         return super().form_valid(form)
 
 
+@method_decorator(signin_required, name='dispatch')
 class CandidateProfileDetailView(TemplateView):
     template_name = "candidate/profile.html"
 
 
+@method_decorator(signin_required, name='dispatch')
 class CandidateProfileEditView(FormView):
     template_name = "candidate/profile_add.html"
     form_class = CandidateProfileUpdateForm
@@ -59,6 +65,7 @@ class CandidateProfileEditView(FormView):
             return render(request, self.template_name, {"form": form})
 
 
+@method_decorator(signin_required, name='dispatch')
 class CandidateJobListView(ListView):
     model = Jobs
     context_object_name = "jobs"
@@ -68,6 +75,7 @@ class CandidateJobListView(ListView):
         return self.model.objects.filter(is_active=True).order_by("-created_date")
 
 
+@method_decorator(signin_required, name='dispatch')
 class CandidateJobDetailView(DetailView):
     model = Jobs
     context_object_name = "job"
@@ -86,6 +94,7 @@ class CandidateJobDetailView(DetailView):
         return context
 
 
+@signin_required
 def apply_now(request, *args, **kwargs):
     user = request.user
     job_id = kwargs.get("id")
@@ -100,6 +109,7 @@ def apply_now(request, *args, **kwargs):
     return redirect("candidate:applications")
 
 
+@method_decorator(signin_required, name='dispatch')
 class ApplicationListView(ListView):
     model = Applications
     template_name = 'candidate/applications.html'
@@ -109,6 +119,7 @@ class ApplicationListView(ListView):
         return Applications.objects.filter(applicant=self.request.user)
 
 
+@signin_required
 def application_cancellation(request, *args, **kwargs):
     app_id = kwargs.get("id")
     application = Applications.objects.get(id=app_id)

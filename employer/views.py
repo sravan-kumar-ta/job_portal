@@ -3,27 +3,28 @@ from django.contrib import messages
 from django.contrib.messages.views import SuccessMessageMixin
 from django.shortcuts import render, redirect
 from django.urls import reverse_lazy
+from django.utils.decorators import method_decorator
 from django.views.generic import TemplateView, ListView, CreateView, DetailView, UpdateView, DeleteView, FormView
 
+from employer.decorators import signin_required
 from employer.forms import JobForm, SignUpForm, LoginForm, CompanyProfileForm, PasswordResetForm
-from employer.models import Jobs, CompanyProfiles, CustomUser
+from employer.models import Jobs, CompanyProfiles, CustomUser, Applications
 
 
 # Create your views here.
+@signin_required
 def home(request):
-    if request.user.is_authenticated:
-        if request.user.role == "employer":
-            return redirect("employer:home")
-        else:
-            return redirect("candidate:home")
+    if request.user.role == "employer":
+        return redirect("employer:home")
     else:
-        return redirect("employer:sign-in")
+        return redirect("candidate:home")
 
 
 class EmployerHomeView(TemplateView):
     template_name = "employer/dashboard.html"
 
 
+@method_decorator(signin_required, name='dispatch')
 class AddJobView(CreateView, SuccessMessageMixin):
     model = Jobs
     form_class = JobForm
@@ -42,6 +43,7 @@ class AddJobView(CreateView, SuccessMessageMixin):
         return super().form_invalid(form)
 
 
+@method_decorator(signin_required, name='dispatch')
 class ListJobsView(ListView):
     model = Jobs
     context_object_name = 'jobs'
@@ -50,7 +52,11 @@ class ListJobsView(ListView):
     def get_queryset(self):
         return Jobs.objects.filter(company=self.request.user).order_by("-id")
 
+    # def get_context_data(self, **kwargs):
+    #     context = super().get_context_data(**kwargs)
 
+
+@method_decorator(signin_required, name='dispatch')
 class JobDetailView(DetailView):
     model = Jobs
     context_object_name = 'job'
@@ -58,6 +64,7 @@ class JobDetailView(DetailView):
     pk_url_kwarg = 'id'
 
 
+@method_decorator(signin_required, name='dispatch')
 class JobEditView(UpdateView):
     model = Jobs
     form_class = JobForm
@@ -69,6 +76,7 @@ class JobEditView(UpdateView):
         return reverse_lazy('employer:job-detail', kwargs={'id': self.object.id})
 
 
+@method_decorator(signin_required, name='dispatch')
 class JobDeleteView(DeleteView, SuccessMessageMixin):
     model = Jobs
     pk_url_kwarg = 'id'
@@ -118,6 +126,7 @@ def signout_view(request):
     return redirect('employer:sign-in')
 
 
+@method_decorator(signin_required, name='dispatch')
 class ChangePasswordView(TemplateView):
     template_name = "auth/password-reset-request.html"
 
@@ -132,6 +141,7 @@ class ChangePasswordView(TemplateView):
             return render(request, self.template_name)
 
 
+@method_decorator(signin_required, name='dispatch')
 class PasswordResetView(FormView):
     form_class = PasswordResetForm
     template_name = "auth/password-reset.html"
@@ -145,6 +155,7 @@ class PasswordResetView(FormView):
         return super().form_valid(form)
 
 
+@method_decorator(signin_required, name='dispatch')
 class CompanyProfileView(CreateView):
     model = CompanyProfiles
     form_class = CompanyProfileForm
@@ -156,13 +167,42 @@ class CompanyProfileView(CreateView):
         return super().form_valid(form)
 
 
+@method_decorator(signin_required, name='dispatch')
 class EmpViewProfileView(TemplateView):
     template_name = "employer/profile.html"
 
 
+@method_decorator(signin_required, name='dispatch')
 class EmpProfileEditVIew(UpdateView):
     model = CompanyProfiles
     form_class = CompanyProfileForm
     pk_url_kwarg = 'id'
     template_name = "employer/profile-update.html"
     success_url = reverse_lazy("employer:profile-view")
+
+
+@method_decorator(signin_required, name='dispatch')
+class ApplicationListView(ListView):
+    model = Applications
+    context_object_name = "applications"
+    template_name = "employer/job-applications.html"
+
+    def get_queryset(self):
+        job_id = self.kwargs.get("job_id")
+        return Applications.objects.filter(job=job_id).exclude(status="Cancelled")
+
+
+@method_decorator(signin_required, name='dispatch')
+class ApplicationDetailView(DetailView):
+    model = Applications
+    pk_url_kwarg = "app_id"
+    context_object_name = "application"
+    template_name = "employer/application.html"
+
+
+@signin_required
+def reject_application(request, app_id):
+    application = Applications.objects.get(id=app_id)
+    application.status = "Rejected"
+    application.save()
+    return redirect("employer:application-list", app_id)

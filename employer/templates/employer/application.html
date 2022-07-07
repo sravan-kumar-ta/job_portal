@@ -1,0 +1,83 @@
+{% extends 'employer/base.html' %}
+{% load static %}
+{% load humanize %}
+
+{% block content %}
+<!-- Page Heading -->
+<div class="d-sm-flex align-items-center justify-content-between mb-4">
+    <h1 class="h3 mb-0 text-gray-800">View Job</h1>
+    <div class="d-flex" style="margin-right: 20px">
+        /<a href="{% url 'employer:home' %}">home</a>/
+        <a href="#">view job</a>/
+    </div>
+</div>
+
+<!-- DataTales Example -->
+<div class="row">
+    <div class="col-lg-8 col-xl-5">
+        <!-- Basic Card Example -->
+        <div class="card shadow">
+            <div class="card-header py-3">
+                <h6 class="m-0 font-weight-bold text-primary">{{ application.job }}</h6>
+            </div>
+            <div class="card-body">
+                {% if messages %}
+                    {% for message in messages %}
+                        <a href="#" class="alert btn btn-success btn-icon-split d-flex justify-content-between mx-5">
+                            <span class="icon text-white-50">
+                                <i class="fas fa-check"></i>
+                            </span>
+                            <span class="text">{{ message }}</span>
+                            <button type="button" class="close pr-2" data-dismiss="alert" aria-label="Close">
+                                <span aria-hidden="true">&times;</span>
+                            </button>
+                        </a>
+                    {% endfor %}
+                {% endif %}
+
+                <table cellpadding="10px">
+                    <tr>
+                        <td>Applicant :</td>
+                        <td class="text-primary">{{ application.applicant }}</td>
+                    </tr>
+                    <tr>
+                        <td>Resume :</td>
+                        <td class="text-primary">
+                            <a href="{{ application.applicant.candidate.resume.url }}">View Resume</a>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td>Date of applied :</td>
+                        <td class="text-primary">{{ application.date|naturalday }}</td>
+                    </tr>
+                    <tr>
+                        <td>Application status :</td>
+                        <td class="text-primary">{{ application.status }}</td>
+                    </tr>
+                </table>
+                <div class="row justify-content-center mt-3">
+                    <div class="col-3">
+                    <a href="{% url 'employer:application-list' application.job.id %}" class="btn btn-success btn-icon-split btn-sm">
+                        <span class="icon text-white-50">
+                            <i class="fas fa-check"></i>
+                        </span>
+                        <span class="text">Back</span>
+                    </a>
+                    </div>
+                    <div class="col-3">
+                        {% if application.status != "Rejected" %}
+                            <a href="{% url 'employer:cancel-application' application.id %}" class="btn btn-warning btn-icon-split btn-sm">
+                                <span class="icon text-white-50">
+                                    <i class="fas fa-exclamation-triangle"></i>
+                                </span>
+                                <span class="text">Reject&nbspApplication</span>
+                            </a>
+                        {% endif %}
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+{% endblock %}

@@ -87,6 +87,8 @@
                                     <a href="{% url 'candidate:cancel-application' application.id %}" class="btn">Cancel Now</a>
                                 {% elif application.status == 'Cancelled' %}
                                     <a href="{% url 'candidate:apply-now' job.id %}" class="btn">Apply Now</a>
+                                {% elif application.status == 'Rejected' %}
+                                    <h4 class="text-danger">Application Rejected</h4>
                                 {% endif %}
                             {% else %}
                                 <a href="{% url 'candidate:apply-now' job.id %}" class="btn">Apply Now</a>

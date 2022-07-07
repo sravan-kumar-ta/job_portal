@@ -57,17 +57,15 @@ class SignUpForm(UserCreationForm):
     password1 = forms.CharField(widget=forms.PasswordInput(attrs={
         "class": "form-control",
         "placeholder": "Password",
-        "id": "password1"
     }))
     password2 = forms.CharField(widget=forms.PasswordInput(attrs={
         "class": "form-control",
         "placeholder": "Confirm Password",
-        "id": "passwossssrd2"
     }))
 
     role = forms.ChoiceField(choices=CustomUser.options, widget=forms.Select(attrs={
         "class": "form-control",
-    }), )
+    }))
 
     class Meta:
         model = CustomUser
