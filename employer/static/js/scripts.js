@@ -6,6 +6,7 @@
 // 
 // Scripts
 // 
+console.log("min activated")
 
 window.addEventListener('DOMContentLoaded', event => {
 

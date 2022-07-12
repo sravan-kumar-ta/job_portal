@@ -33,6 +33,10 @@
                                     </tr>
                                     {% if request.user.candidate %}
                                     <tr>
+                                        <td>Mail address: </td>
+                                        <td>{{ request.user.candidate.email }}</td>
+                                    </tr>
+                                    <tr>
                                         <td>Qualification: </td>
                                         <td>{{ request.user.candidate.qualification }}</td>
                                     </tr>

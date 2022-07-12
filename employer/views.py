@@ -1,6 +1,7 @@
 from django.contrib.auth import authenticate, login, logout
 from django.contrib import messages
 from django.contrib.messages.views import SuccessMessageMixin
+from django.core.mail import send_mail
 from django.shortcuts import render, redirect
 from django.urls import reverse_lazy
 from django.utils.decorators import method_decorator
@@ -206,3 +207,20 @@ def reject_application(request, app_id):
     application.status = "Rejected"
     application.save()
     return redirect("employer:application-list", app_id)
+
+
+def accept_application(request, app_id):
+    application = Applications.objects.get(id=app_id)
+    application.status = 'Accepted'
+    application.save()
+    mail_id = application.applicant.candidate.email
+    if mail_id:
+        message = request.POST.get('message')
+        send_mail(
+            'Your application accepted',
+            message,
+            'Job Portal <srawz101@gmail.com.com>',
+            [mail_id],
+            fail_silently=False,
+        )
+    return redirect("employer:application-list", application.job.id)

@@ -53,6 +53,7 @@ class CandidateProfileUpdateForm(forms.ModelForm):
         fields = [
             "first_name",
             "last_name",
+            "email",
             "phone",
             "profile_pic",
             "resume",
@@ -73,6 +74,10 @@ class CandidateProfileUpdateForm(forms.ModelForm):
             "experience": forms.NumberInput(attrs={
                 "class": "form-control rounded-pill single-input",
                 "placeholder": "Phone number",
+            }),
+            "email": forms.EmailInput(attrs={
+                "class": "form-control rounded-pill single-input",
+                "placeholder": "Email address",
             }),
         }
 

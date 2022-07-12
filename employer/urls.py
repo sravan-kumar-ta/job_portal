@@ -25,4 +25,5 @@ urlpatterns = [
     path('applications/<int:job_id>/', views.ApplicationListView.as_view(), name="application-list"),
     path('application/<int:app_id>/', views.ApplicationDetailView.as_view(), name="view-application"),
     path('application/cancel/<int:app_id>/', views.reject_application, name="cancel-application"),
+    path('application/accept/<int:app_id>/', views.accept_application, name="accept-application"),
 ]
