@@ -9,7 +9,6 @@ class CustomUser(AbstractUser):
         ("candidate", "Candidate")
     )
     role = models.CharField(max_length=120, choices=options, default="candidate")
-    phone = models.CharField(max_length=120, null=True)
 
 
 class Jobs(models.Model):

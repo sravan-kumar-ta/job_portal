@@ -53,9 +53,6 @@ class ListJobsView(ListView):
     def get_queryset(self):
         return Jobs.objects.filter(company=self.request.user).order_by("-id")
 
-    # def get_context_data(self, **kwargs):
-    #     context = super().get_context_data(**kwargs)
-
 
 @method_decorator(signin_required, name='dispatch')
 class JobDetailView(DetailView):
@@ -209,6 +206,7 @@ def reject_application(request, app_id):
     return redirect("employer:application-list", app_id)
 
 
+@signin_required
 def accept_application(request, app_id):
     application = Applications.objects.get(id=app_id)
     application.status = 'Accepted'
@@ -219,7 +217,7 @@ def accept_application(request, app_id):
         send_mail(
             'Your application accepted',
             message,
-            'Job Portal <srawz101@gmail.com.com>',
+            'Job Portal <your email id>',
             [mail_id],
             fail_silently=False,
         )

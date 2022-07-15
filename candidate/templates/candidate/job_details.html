@@ -13,7 +13,11 @@
                     <div class="single-job-items mb-50">
                         <div class="job-items">
                             <div class="company-img company-img-details">
-                                <a href="#"><img src="{% static 'assets/img/icon/job-list1.png' %}" alt=""></a>
+                                {% if job.company.employer.logo %}
+                                    <img src="{{ job.company.employer.logo.url }}" alt="">
+                                {% else %}
+                                    <img src="{% static 'assets/img/icon/job-list1.png' %}" alt="">
+                                {% endif %}
                             </div>
                             <div class="job-tittle">
                                 <a href="#">

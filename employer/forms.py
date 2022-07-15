@@ -69,7 +69,7 @@ class SignUpForm(UserCreationForm):
 
     class Meta:
         model = CustomUser
-        fields = ['username', 'first_name', 'last_name', 'email', 'phone', 'role', 'password1', 'password2']
+        fields = ['username', 'first_name', 'last_name', 'email', 'role', 'password1', 'password2']
         widgets = {
             'first_name': forms.TextInput(attrs={
                 "class": "form-control",
@@ -86,10 +86,6 @@ class SignUpForm(UserCreationForm):
             'email': forms.EmailInput(attrs={
                 "class": "form-control",
                 "placeholder": "Email",
-            }),
-            'phone': forms.TextInput(attrs={
-                "class": "form-control",
-                "placeholder": "Phone",
             }),
         }
 
